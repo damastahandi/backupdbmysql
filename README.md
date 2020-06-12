@@ -20,4 +20,4 @@ Before you started: <br />
    password="(your-database-password)" <br />
 
 How to run: <br />
-/bin/sh backup-script.sh
+/bin/sh backupdb-script.sh
