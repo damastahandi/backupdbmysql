@@ -23,14 +23,19 @@ else
  then
   /usr/local/bin/telegram-send -g "Compressing file backup has failed, please see $LOG for detail information."
  else
- # Remove file with extension .sql
- /usr/bin/rm -f $DSTFOLDER/$DBNAME.sql
+  # Remove file with extension .sql
+  /usr/bin/rm -f $DSTFOLDER/$DBNAME.sql
+  # Backup & compress successful, send notification to telegram
+  LISTFILES="$(ls -lhtr $DSTFOLDER | awk '{print $5,$9}')"
+  /usr/local/bin/telegram-send -g "Backup database $DBNAME has successful! $LISTFILES"
+  # Remove file after 7 days
+  find $DSTFOLDER -maxdepth 1 -type f -mtime +7 -name '*.tar.gz'
+  if [ "$?" -eq 0 ]
+  then
+   /usr/local/bin/telegram-send -g "Backup file older than 7 days not found." 
+  else
+   DELETEFILES="$(find $DSTFOLDER -maxdepth 1 -type f -mtime +7 -name '*.tar.gz' -ls -exec rm {} \;)"
+   /usr/local/bin/telegram-send -g "Backup file older than 7 days has been deleted! $DELETEFILES"
+  fi
  fi
- # Backup & compress successful, send notification to telegram
- LISTFILES="$(ls -lhtr $DSTFOLDER | awk '{print $5,$9}')"
- /usr/local/bin/telegram-send -g "Backup database $DBNAME has successful! $LISTFILES"
 fi
-
-# Remove file after 7 days
-DELETEFILES="$(find $DSTFOLDER -maxdepth 1 -type f -mtime +7 -name '*.tar.gz' -ls -exec rm {} \;)"
-/usr/local/bin/telegram-send -g "Backup file older than 7 days has been deleted! $DELETEFILES"
