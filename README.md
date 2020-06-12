@@ -1,4 +1,4 @@
-# Backup Single MySQL Database
+# Backup Single MySQL Database + Notification Telegram
 
 Before you started: <br />
 1. You need to install MySQL client to your server. <br />
