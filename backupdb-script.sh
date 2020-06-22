@@ -30,7 +30,7 @@ else
   /usr/local/bin/telegram-send -g "Backup database $DBNAME has successful! $LISTFILES"
   # Remove file after 7 days
   find $DSTFOLDER -maxdepth 1 -type f -mtime +7 -name '*.tar.gz'
-  if [ "$?" -eq 0 ]
+  if [ "$?" -ne 0 ]
   then
    /usr/local/bin/telegram-send -g "Backup file older than 7 days not found." 
   else
